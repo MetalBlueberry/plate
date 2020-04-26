@@ -33,6 +33,10 @@ func Run(conf Config) error {
 	inputData := make(map[string]interface{})
 	decoder.Decode(&inputData)
 
+	templateData := &TemplateData{
+		Params: inputData,
+	}
+
 	tpl, err := template.New("empty").Funcs(sprig.TxtFuncMap()).ParseGlob(conf.TemplateGlob)
 	if err != nil {
 		return err
@@ -41,10 +45,10 @@ func Run(conf Config) error {
 	switch {
 	case len(tpl.Templates()) == 1:
 		for _, tpls := range tpl.Templates() {
-			return tpls.Execute(conf.Output, inputData)
+			return tpls.Execute(conf.Output, templateData)
 		}
 	case len(tpl.Templates()) > 1 && conf.TemplateToExecute != "":
-		return tpl.ExecuteTemplate(conf.Output, conf.TemplateToExecute, inputData)
+		return tpl.ExecuteTemplate(conf.Output, conf.TemplateToExecute, templateData)
 	default:
 		return errors.New("You must specify the template to render with parsing multiple template files.")
 	}
