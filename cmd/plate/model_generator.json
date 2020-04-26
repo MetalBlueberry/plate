@@ -1,0 +1,66 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The Root Schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "additionalProperties": true,
+    "required": [
+        "checked",
+        "dimensions"
+    ],
+    "properties": {
+        "checked": {
+            "$id": "#/properties/checked",
+            "type": "boolean",
+            "title": "The Checked Schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": false,
+            "examples": [
+                false
+            ]
+        },
+        "dimensions": {
+            "$id": "#/properties/dimensions",
+            "type": "object",
+            "title": "The Dimensions Schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": {},
+            "examples": [
+                {
+                    "width": 5.0,
+                    "height": 10.0
+                }
+            ],
+            "additionalProperties": true,
+            "required": [
+                "width",
+                "height"
+            ],
+            "properties": {
+                "width": {
+                    "$id": "#/properties/dimensions/properties/width",
+                    "type": "integer",
+                    "title": "The Width Schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": 0,
+                    "examples": [
+                        5.0
+                    ]
+                },
+                "height": {
+                    "$id": "#/properties/dimensions/properties/height",
+                    "type": "integer",
+                    "title": "The Height Schema",
+                    "description": "An explanation about the purpose of this instance.",
+                    "default": 0,
+                    "examples": [
+                        10.0
+                    ]
+                }
+            }
+        }
+    }
+}
+}
