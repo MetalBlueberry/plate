@@ -28,7 +28,7 @@ var _ = Describe("Main", func() {
 		cfg.TemplateGlob = path.Join(templateFolder, "*.tmpl")
 		cfg.TemplateToExecute = file + ".tmpl"
 
-		err = plate.Run(cfg)
+		err = plate.NewPlate(cfg).Run()
 		Expect(err).To(BeNil())
 
 		bytes, err := ioutil.ReadFile(path.Join(templateFolder, file+".txt"))

@@ -1,3 +1,3 @@
-{{ range $k,$v := .Params -}}
+{{ range $k,$v := . -}}
 Field {{ $k }} with value = {{ $v }}
 {{- end }}
