@@ -1,3 +1,6 @@
+
+from TheDimensionsSchema import TheDimensionsSchema
+
 class TheRootSchema():
     def __init__(
         self,

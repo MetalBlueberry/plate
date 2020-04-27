@@ -1,6 +1,13 @@
 {{ define "pyclass" }}
 {{- $types := dict "boolean" "bool" "object" "dict" "integer" "int" "number" "float" "array" "list" "string" "str" -}} 
 {{- $nested := list -}}
+
+{{- range $name, $values := .properties }}
+{{- if eq $values.type "object" }}
+from {{ $values.title | nospace }} import {{ $values.title | nospace }}
+{{- end }}
+{{- end }}
+
 class {{ .title | nospace }}():
     def __init__(
         self,
