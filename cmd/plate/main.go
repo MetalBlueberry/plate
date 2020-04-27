@@ -10,8 +10,8 @@ func main() {
 	cfg := plate.NewConfig()
 	cfg.Input = os.Stdin
 	cfg.Output = os.Stdout
-
-	err := plate.Run(cfg)
+	cfg.TemplateToExecute = "model_generator.tmpl"
+	err := plate.NewPlate(cfg).Run()
 	if err != nil {
 		panic(err)
 	}

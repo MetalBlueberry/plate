@@ -1,19 +1,28 @@
-{{- $types := dict "boolean" "bool" "object" "dict" "integer" "int" -}} 
+{{ define "pyclass" }}
+{{- $types := dict "boolean" "bool" "object" "dict" "integer" "int" "number" "float" "array" "list" "string" "str" -}} 
 {{- $nested := list -}}
-class {{ .Params.title | nospace }}():
+class {{ .title | nospace }}():
     def __init__(
         self,
-        {{ range $name, $values := .Params.properties -}}
+        {{- range $name, $values := .properties }}
         {{ $name }}
         {{- if eq $values.type "object" }}: {{ $values.title | nospace }} = None,
-        {{ else }}: {{ get $types $values.type }} = {{ $values.default }},
-        {{ end -}}
-        {{- end }}):
-        {{ range $name, $values := .Params.properties -}}
+        {{- else if eq $values.type "string"}}: {{ get $types $values.type }}
+            {{- if hasKey $values "default" }} = {{ quote $values.default }}{{ end }},
+        {{- else }}: {{ default $values.type (get $types $values.type) }}
+            {{- if hasKey $values "default" }} = {{ $values.default }}{{ end }},
+        {{- end }}
+        {{- end }}
+    ):
+        {{ range $name, $values := .properties -}}
         self.{{ $name }}: {{ get $types $values.type }} = {{ $name }}
-        {{ if eq $values.type "object"}}{{ $nested = append $nested $values }}{{ end -}}
-        {{ end }}
+        {{- if eq $values.type "object"}}{{ $nested = append $nested $values }}{{ end }}
+        {{- end }}
 {{ range $id, $nest := $nested }}
-{{ template "model_generator.tmpl" (merge (dict "Params" $nest) .) }}
+{{- $err := newFile  (printf "%s.py" ( $nest.title | nospace)) "pyclass" $nest -}}
+{{ if $err}}{{ $err }}{{- end -}}
+{{- end -}}
 {{- end -}}
     
+
+{{- newFile  (printf "%s.py" (.title | nospace)) "pyclass" . -}}
