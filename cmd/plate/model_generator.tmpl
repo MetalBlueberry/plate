@@ -17,7 +17,7 @@ class {{ .title | nospace }}():
         {{ range $name, $values := .properties -}}
         self.{{ $name }}: {{ get $types $values.type }} = {{ $name }}
         {{- if eq $values.type "object"}}{{ $nested = append $nested $values }}{{ end }}
-        {{- end }}
+        {{ end }}
 {{ range $id, $nest := $nested }}
 {{- $err := newFile  (printf "%s.py" ( $nest.title | nospace)) "pyclass" $nest -}}
 {{ if $err}}{{ $err }}{{- end -}}
