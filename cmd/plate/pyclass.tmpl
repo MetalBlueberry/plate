@@ -1,0 +1,38 @@
+{{- define "pyclass" -}}
+{{- $types := dict "boolean" "bool" "object" "dict" "integer" "int" "number" "float" "array" "list" "string" "str" -}} 
+{{- range $name, $values := .properties }}
+{{- if eq $values.type "object" }}
+from {{ $values.title | nospace }} import {{ $values.title | nospace }}
+{{- end }}
+{{- end }}
+
+class {{ .title | nospace }}():
+    def __init__(
+        self,
+        {{- range $name, $values := .properties }}
+        {{ $name }}
+        {{- if eq $values.type "object" }}: {{ $values.title | nospace }} = None,
+        {{- else if eq $values.type "string"}}: {{ get $types $values.type }}
+            {{- if hasKey $values "default" }} = {{ quote $values.default }}{{ end }},
+        {{- else }}: {{ default $values.type (get $types $values.type) }}
+            {{- if hasKey $values "default" }} = {{ $values.default }}{{ end }},
+        {{- end }}
+        {{- end }}
+    ):
+        {{ range $name, $values := .properties -}}
+        self.{{ $name }}: {{ get $types $values.type }} = {{ $name }}
+        {{ end }}
+{{ end }}
+    
+{{- define "swagger" -}}
+{{- $nested := list -}}
+generating schema for {{ .title }} at {{ (printf "%s.py" (.title | nospace)) }}
+{{- $err := newFile  (printf "%s.py" (.title | nospace)) "pyclass" . -}}
+{{ if $err }} error rendering template {{ $err }} {{ end }}
+{{- range $name, $values := .properties }}
+    {{- if eq $values.type "object"}}{{ $nested = append $nested $values }}{{ end }}
+    {{- end }}
+    {{ range $id, $nest := $nested -}}
+    {{- template "swagger" $nest -}}
+{{- end -}}
+{{- end -}}
