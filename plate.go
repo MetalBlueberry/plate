@@ -51,7 +51,7 @@ func (plate *Plate) Run() error {
 		Funcs(sprig.TxtFuncMap()).
 		Funcs(
 			template.FuncMap{
-				"newFile": plate.NewFile,
+				"file": plate.NewFile,
 			}).
 		ParseGlob(plate.Conf.TemplateGlob)
 
@@ -67,7 +67,7 @@ func (plate *Plate) Run() error {
 	case len(tpl.Templates()) > 1 && plate.Conf.TemplateToExecute != "":
 		return tpl.ExecuteTemplate(plate.Conf.Output, plate.Conf.TemplateToExecute, inputData)
 	default:
-		return errors.New("You must specify the template to render with parsing multiple template files.")
+		return errors.New("You must specify the template to render when having multiple templates defined.")
 	}
 
 	return nil

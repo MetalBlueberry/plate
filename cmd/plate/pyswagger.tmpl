@@ -27,7 +27,7 @@ class {{ .title | nospace }}():
 {{- define "swagger" -}}
 {{- $nested := list -}}
 generating schema for {{ .title }} at {{ (printf "%s.py" (.title | nospace)) }}
-{{- $err := newFile  (printf "%s.py" (.title | nospace)) "pyclass" . -}}
+{{- $err := file  (printf "%s.py" (.title | nospace)) "pyclass" . -}}
 {{ if $err }} error rendering template {{ $err }} {{ end }}
 {{- range $name, $values := .properties }}
     {{- if eq $values.type "object"}}{{ $nested = append $nested $values }}{{ end }}
