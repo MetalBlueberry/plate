@@ -1,8 +1,10 @@
 package plate
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -51,7 +53,9 @@ func (plate *Plate) Run() error {
 		Funcs(sprig.TxtFuncMap()).
 		Funcs(
 			template.FuncMap{
-				"file": plate.NewFile,
+				"file":      plate.NewFile,
+				"stemplate": plate.Stemplate,
+				"parseJSON": plate.ParseJSON,
 			}).
 		ParseGlob(plate.Conf.TemplateGlob)
 
@@ -94,4 +98,25 @@ func (plate *Plate) NewFile(file string, template string, data interface{}) erro
 	}
 	defer out.Close()
 	return plate.Base.ExecuteTemplate(out, template, data)
+}
+
+func (plate *Plate) Stemplate(template string, data interface{}) (string, error) {
+	buf := &bytes.Buffer{}
+	err := plate.Base.ExecuteTemplate(buf, template, data)
+	return buf.String(), err
+}
+
+func (plate *Plate) ParseJSON(template string, data interface{}) (interface{}, error) {
+	buf := bytes.Buffer{}
+	err := plate.Base.ExecuteTemplate(&buf, template, data)
+	if err != nil {
+		return nil, err
+	}
+	var out interface{}
+	err = json.Unmarshal(buf.Bytes(), &out)
+	if err != nil {
+		log.Print(buf.String())
+		return nil, fmt.Errorf("Error parsing string as json, cause %w", err)
+	}
+	return out, err
 }

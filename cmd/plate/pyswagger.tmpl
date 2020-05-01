@@ -33,6 +33,7 @@ generating schema for {{ .title }} at {{ (printf "%s.py" (.title | nospace)) }}
     {{- if eq $values.type "object"}}{{ $nested = append $nested $values }}{{ end }}
     {{- end }}
     {{ range $id, $nest := $nested -}}
-    {{- template "swagger" $nest -}}
+    {{- $next := stemplate "swagger" $nest -}}
+    {{ $next }}}
 {{- end -}}
 {{- end -}}
