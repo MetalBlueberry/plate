@@ -25,7 +25,7 @@ var _ = Describe("Main", func() {
 		cfg := plate.NewConfig()
 		cfg.Input = input
 		cfg.Output = output
-		cfg.TemplateGlob = path.Join(templateFolder, "*.tmpl")
+		cfg.TemplateGlob = path.Join(templateFolder, file+".tmpl")
 		cfg.TemplateToExecute = file + ".tmpl"
 
 		err = plate.NewPlate(cfg).Run()
@@ -41,7 +41,8 @@ var _ = Describe("Main", func() {
 		panic(err)
 	}
 
-	for _, file := range files {
+	for i := range files {
+		file := files[i]
 		It("Should parse the template"+file, func() {
 			fileName := strings.TrimPrefix(file, "test_templates/")
 			fileWithoutExtension := strings.TrimSuffix(fileName, filepath.Ext(fileName))

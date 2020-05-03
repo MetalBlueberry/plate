@@ -1,0 +1,12 @@
+{{ define "json" }}
+{
+    "items": [
+        {{- range $n,$i := . }}
+        {{- if ne 0 $n -}},{{- end -}}
+        {{- quote $i }}
+        {{- end}}
+        ]
+}
+{{- end }}
+{{- $data := parseJSON "json" (list "a" "b" "c") }}
+{{- $data -}}

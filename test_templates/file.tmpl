@@ -1,0 +1,11 @@
+{{- define "file" -}}
+{{ . }}
+{{- end }}
+{{- range $file, $params := .files }}
+{{- $err := file $params.name "file" $params.content }}
+{{- if $err -}}
+error!!
+{{- else -}}
+ok
+{{- end }}
+{{- end }}
