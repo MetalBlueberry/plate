@@ -1,0 +1,7 @@
+{{- define "stemplate" -}}
+This template is rendered as string.
+{{ . }}
+{{- end -}}
+
+{{- $content := stemplate "stemplate" .data -}}
+{{- $content -}}
